@@ -124,7 +124,7 @@ def get_experiment_name(config_d):
 
     # model type
     model_type = get_model_type(config_d)
-    timestamp = get_timestamp()
+    timestamp = get_timestamp()  # todo we cant use : in the filename
     hp_name = get_hp_value_name(config_d)
     return '%s_%s_%s' % (model_type, hp_name, timestamp)
 

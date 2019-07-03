@@ -1,4 +1,4 @@
-experiments_dir: ${HOME}/projects/E2EChallenge/experiments
+experiments_dir: experiments
 log_level: INFO
 random_seed: 1
 
@@ -17,8 +17,8 @@ evaluation-module: components.evaluator.e2e_evaluator
 
 data_params:
 
-  train_data: ${HOME}/var/E2E_challenge/trainset.csv
-  dev_data: ${HOME}/var/E2E_challenge/devset.csv
+  train_data: dataset/trainset.csv
+  dev_data: dataset/devset.csv
   test_data:
 
   max_src_len: 50

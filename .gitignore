@@ -8,3 +8,5 @@
 sandbox/
 components/evaluator/input_files/*
 
+dataset/*
+experiments/*
