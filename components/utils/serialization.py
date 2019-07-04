@@ -150,7 +150,8 @@ def get_timestamp():
 
     :return: current timestamp (string)
     """
-    return '{:%Y-%b-%d_%H:%M:%S}'.format(datetime.now())
+    # return '{:%Y-%b-%d_%H:%M:%S}'.format(datetime.now())
+    return datetime.now().strftime("%Y%m%d%H%M%S")
 
 
 def get_hp_value_name(config_dict):
