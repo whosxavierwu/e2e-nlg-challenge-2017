@@ -29,7 +29,7 @@ class BaseDataClass(object):
         # constant (8)
         self.num_mr_attr = len(MR_FIELDS)
         self.vocab = None
-        self.lexicalizations = {'train': None, 'dev': None, 'test': None}
+        self.lexicalizations = {'train': None, 'dev': None, 'test': None}  # containing [name, near] pairs
         self.fnames = {}
 
     def setup(self):
@@ -83,9 +83,9 @@ class BaseDataClass(object):
     def read_csv_train(self, fname, group_ref=False):
         """
         Read the CSV file containing training data.
-
+        todo how to create my training data?
         :param fname:
-        :param group_ref: group multiple references, if possible (dev set)
+        :param group_ref: group multiple references, if possible (dev set)  todo why?
         :return: 3 lists:
             - MR instances
             - corresponding textual descriptions
@@ -109,8 +109,8 @@ class BaseDataClass(object):
             curr_snt = first_row[1]
             orig.append((curr_mr, curr_snt))
 
-            curr_src, curr_lex = self.process_e2e_mr(curr_mr)
-            curr_text = self.tokenize(curr_snt, curr_lex)
+            curr_src, curr_lex = self.process_e2e_mr(curr_mr)  # list of attribute values
+            curr_text = self.tokenize(curr_snt, curr_lex)  # list of tokens
 
             # add raw data instance
             raw_data_x.append(curr_src)
@@ -129,11 +129,11 @@ class BaseDataClass(object):
                 raw_data_x.append(this_src)
                 raw_data_y.append(this_text)
 
-                if this_src == curr_src:
+                if this_src == curr_src:  # why don't we compare lex?
                     continue
 
                 else:
-                    lexicalizations.append(this_lex)
+                    lexicalizations.append(this_lex)  # same lex may occurs many times?
                     curr_src = this_src
 
         if group_ref:
@@ -215,6 +215,7 @@ class BaseDataClass(object):
         words = []
 
         # Delexicalize target side
+        # todo so we throw away the name & near here
         if lex_list:
             for l, t in zip(lex_list, (NAME_TOKEN, NEAR_TOKEN)):
                 if l:
@@ -224,7 +225,7 @@ class BaseDataClass(object):
         for fragment in s.strip().split():
             fragment_tokens = _WORD_SPLIT.split(fragment)
             words.extend(fragment_tokens)
-
+        # from sentence to tokens, for now, it's word
         tokens = [w for w in words if w]
 
         return tokens

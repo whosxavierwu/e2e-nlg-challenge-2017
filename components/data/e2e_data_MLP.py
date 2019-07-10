@@ -19,11 +19,13 @@ class E2EMLPData(BaseDataClass):
         Processing E2E NLG Challenge meaning representation
         Represent each MR as a list of 8 attributes, specified in MR_KEYMAP.
 
-        :param mr_string:
-        :return:
+        :param mr_string: a MR in the dataset
+        :return: mr_data: a list of field values, containing raw data.
+            lex: a list of name and near, raw data
         """
         items = mr_string.split(", ")
         mr_data = [PAD_ID] * MR_KEY_NUM
+        # we dont need to encoding the fields "name" and "near"
         lex = [None, None]  # holds lexicalized variants of NAME and NEAR
 
         for idx, item in enumerate(items):

@@ -138,7 +138,7 @@ class VocabularyShared(VocabularyBase):
         if not check_file_exists(vocab_path):
             assert (data_raw_src is not None) and (data_raw_tgt is not None), \
                 "You need to process train data ** before ** creating a vocabulary!"
-            self.create_vocabulary(raw_data_src=data_raw_src,
+            self.create_vocabulary(raw_data_src=data_raw_src,  # todo note here we use value of attributes in train set as tokens directly.
                                    raw_data_tgt=data_raw_tgt,
                                    vocab_path=vocab_path)
 
