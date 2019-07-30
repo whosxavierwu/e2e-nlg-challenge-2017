@@ -54,7 +54,6 @@ class BaseDataClass(object):
             # Note that training only makes sense if we have both train and dev data
             if dev_data_fname is None:
                 raise Exception("No dev data in the config file!")
-
             logger.debug("Reading dev data")
             dev_x_raw, dev_y_raw, dev_lex = self.read_csv_train(dev_data_fname, group_ref=True)
             self.lexicalizations['dev'] = dev_lex
@@ -91,16 +90,14 @@ class BaseDataClass(object):
             - corresponding textual descriptions
             - lexicalizations of ['name', 'near'] for each instance
         """
-
         raw_data_x = []
         raw_data_y = []
         lexicalizations = []
 
-        orig = []
+        orig = []  # stores (mr, snt)
         with open(fname, 'r') as csv_file:
             reader = csv.reader(csv_file, delimiter=',', quotechar='"')
             header = next(reader)
-
             # Files should have headers
             assert header == ['mr', 'ref'], 'The file does not contain a header!'
 
@@ -108,10 +105,8 @@ class BaseDataClass(object):
             curr_mr = first_row[0]
             curr_snt = first_row[1]
             orig.append((curr_mr, curr_snt))
-
             curr_src, curr_lex = self.process_e2e_mr(curr_mr)  # list of attribute values
             curr_text = self.tokenize(curr_snt, curr_lex)  # list of tokens
-
             # add raw data instance
             raw_data_x.append(curr_src)
             raw_data_y.append(curr_text)
@@ -121,24 +116,19 @@ class BaseDataClass(object):
                 mr = row[0]
                 text = row[1]
                 orig.append((mr, text))
-
                 this_src, this_lex = self.process_e2e_mr(mr)
                 this_text = self.tokenize(text, this_lex)
-
                 # add raw data instance
                 raw_data_x.append(this_src)
                 raw_data_y.append(this_text)
 
                 if this_src == curr_src:  # why don't we compare lex?
                     continue
-
                 else:
                     lexicalizations.append(this_lex)  # same lex may occurs many times?
                     curr_src = this_src
-
         if group_ref:
             gen_multi_ref_dev(orig, fname='%s.multi-ref' % fname)
-
         return raw_data_x, raw_data_y, lexicalizations
 
     def read_csv_test(self, fname):
@@ -265,25 +255,20 @@ def gen_multi_ref_dev(dev_xy, fname):
 
     multi_ref_src_fn = '%s.src' % fname
     with open(fname, 'w') as fout, open(multi_ref_src_fn, 'w') as fout_src:
-
         # Write the first sentence
         curr_mr, curr_txt = dev_xy[0]
         fout.write('%s\n' % curr_txt)
         fout_src.write('%s\n' % curr_mr)
-
         # Iterate over xy pairs
         for mr, txt in dev_xy[1:]:
-
             # If MR is the same, write the ref to the tgt file
             if mr == curr_mr:
                 fout.write('%s\n' % txt)
-
             else:
                 # Else, write a newline, then the new ref and update current MR
                 fout.write('\n')
                 fout.write('%s\n' % txt)
                 curr_mr = mr
-
                 # Write the new MR input to the src file
                 fout_src.write('%s\n' % mr)
 

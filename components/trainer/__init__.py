@@ -99,7 +99,6 @@ class BaseTrainer(object):
             model = model.cuda()
 
         for epoch_idx in range(1, self.n_epochs + 1):
-
             epoch_start = time.time()
             pred_fn = os.path.join(self.model_dir, 'predictions.epoch%d' % epoch_idx)
 

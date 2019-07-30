@@ -27,26 +27,20 @@ class E2EMLPData(BaseDataClass):
         mr_data = [PAD_ID] * MR_KEY_NUM
         # we dont need to encoding the fields "name" and "near"
         lex = [None, None]  # holds lexicalized variants of NAME and NEAR
-
         for idx, item in enumerate(items):
             key, raw_val = item.split("[")
             key_idx = MR_KEYMAP[key]
-
             # Delexicalization of the 'name' field
             if key == 'name':
                 mr_val = NAME_TOKEN
                 lex[0] = raw_val[:-1]
-
             # Delexicalization of the 'near' field
             elif key == 'near':
                 mr_val = NEAR_TOKEN
                 lex[1] = raw_val[:-1]
-
             else:
                 mr_val = raw_val[:-1]
-
             mr_data[key_idx] = mr_val
-
         return mr_data, lex
 
     def data_to_token_ids_train(self, raw_x, raw_y):

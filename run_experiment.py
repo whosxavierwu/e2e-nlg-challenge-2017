@@ -1,3 +1,4 @@
+# read config file and run train or test experiments
 import importlib
 import os
 import sys
@@ -40,14 +41,13 @@ def run(config_dict):
         trainer = TrainingClass(training_params)
         trainer.training_start(model, data)
         save_config(config_dict, os.path.join(model_dirname, 'config.json'))
-
     elif mode == "predict":
         assert evaluation_module is not None, "No evaluation module -- check config file!"
         evaluator = EvaluationClass(config_dict)
         model_fname = config_dict["model_fn"]
         load_model(model, model_fname)
         id2word = data.vocab.id2tok
-
+        # predict on dev set
         if 'dev' in data.fnames:
             logger.info("Predicting on dev data")
             predicted_ids, attention_weights = evaluator.evaluate_model(model, data.dev[0])
@@ -55,9 +55,8 @@ def run(config_dict):
             predicted_snts = evaluator.lexicalize_predictions(predicted_ids,
                                                               data_lexicalizations,
                                                               id2word)
-
             save_predictions_txt(predicted_snts, '%s.devset.predictions.txt' % model_fname)
-            
+        # predict on test set
         if 'test' in data.fnames:
             logger.info("Predicting on test data")
             predicted_ids, attention_weights = evaluator.evaluate_model(model, data.test[0])
@@ -65,9 +64,7 @@ def run(config_dict):
             predicted_snts = evaluator.lexicalize_predictions(predicted_ids,
                                                               data_lexicalizations,
                                                               id2word)
-
             save_predictions_txt(predicted_snts, '%s.testset.predictions.txt' % model_fname)
-
     else:
         logger.warning("Check the 'mode' field in the config file: %s" % mode)
 
