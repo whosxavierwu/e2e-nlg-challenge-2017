@@ -1,5 +1,5 @@
 *.iml
-.idea
+
 
 **/__pycache__
 *.pyc
@@ -8,5 +8,6 @@
 sandbox/
 components/evaluator/input_files/*
 
+.idea/*
 dataset/*
 experiments/*
